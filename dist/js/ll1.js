@@ -20,19 +20,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 // TODO: Inter-rule left-recursion elimination ( e.g. A -> Ba, B -> Ab )
 // TODO: Multi-repeat left-recursion elimination ( e.g. A -> AAb )
 var leftRecursionElimination = exports.leftRecursionElimination = function leftRecursionElimination(name, definition) {
-  var _ref;
+  var _ref2;
 
-  return _ref = {}, _defineProperty(_ref, name, definition.filter(function (d) {
-    return d[0] !== name;
-  }).map(function (beta) {
-    return (0, _types.isTerm)(beta[0], 'EPS') ? [name + '\''] : _lodash2.default.concat(beta, name + '\'');
-  })), _defineProperty(_ref, name + '\'', _lodash2.default.concat(definition.filter(function (d) {
+  var alphas = definition.filter(function (d) {
     return d[0] === name;
   }).map(function (d) {
     return _lodash2.default.slice(d, 1);
-  }).map(function (alpha) {
+  });
+  var betas = definition.filter(function (d) {
+    return d[0] !== name;
+  });
+  return alphas.length === 0 ? _defineProperty({}, name, betas) : (_ref2 = {}, _defineProperty(_ref2, name, betas.map(function (beta) {
+    return (0, _types.isTerm)(beta[0], 'EPS') ? [name + '\''] : _lodash2.default.concat(beta, name + '\'');
+  })), _defineProperty(_ref2, name + '\'', _lodash2.default.concat(alphas.map(function (alpha) {
     return _lodash2.default.concat(alpha, name + '\'');
-  }), [_definitions.terms.get('eps')])), _ref;
+  }), [_definitions.terms.get('eps')])), _ref2);
 };
 
 // TODO: Multi-repeat left-factoring ( e.g. A -> Aa | A+b | A+c )

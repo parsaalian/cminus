@@ -5,14 +5,16 @@ import { terms } from './definitions';
 // TODO: Inter-rule left-recursion elimination ( e.g. A -> Ba, B -> Ab )
 // TODO: Multi-repeat left-recursion elimination ( e.g. A -> AAb )
 export const leftRecursionElimination = function(name, definition) {
-  return {
-    [name]: definition.filter(d => d[0] !== name).
-            map(beta => isTerm(beta[0], 'EPS') ? [name + '\''] : _.concat(beta, name + '\'')),
-    [name + '\'']: _.concat(definition.filter(d => d[0] === name).
-                  map(d => _.slice(d, 1)).
-                  map(alpha => _.concat(alpha, name + '\'')), [terms.get('eps')])
+  const alphas = definition.filter(d => d[0] === name).map(d => _.slice(d, 1));
+  const betas = definition.filter(d => d[0] !== name);
+  return alphas.length === 0 ? {
+      [name]: betas
+  } : {
+    [name]: betas.map(beta => isTerm(beta[0], 'EPS') ? [name + '\''] : _.concat(beta, name + '\'')),
+    [name + '\'']: _.concat(alphas.map(alpha => _.concat(alpha, name + '\'')), [terms.get('eps')])
   };
 }
+
 
 // TODO: Multi-repeat left-factoring ( e.g. A -> Aa | A+b | A+c )
 export const leftFactoring = function(name, definition) {
