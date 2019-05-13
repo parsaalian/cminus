@@ -10,9 +10,17 @@ export class Term {
   }
 }
 
+export const isTerm = function(variable, term) {
+  return variable.constructor.name === 'Term' && variable.symbol() === term;
+}
+
 export class NTerm {
   constructor(definitions) {
     this._definitions = definitions;
+  }
+
+  definitions() {
+    return this._definitions;
   }
 }
 

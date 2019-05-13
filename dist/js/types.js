@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Listing = exports.NTerm = exports.Term = undefined;
+exports.Listing = exports.NTerm = exports.isTerm = exports.Term = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -32,11 +32,26 @@ var Term = exports.Term = function () {
   return Term;
 }();
 
-var NTerm = exports.NTerm = function NTerm(definitions) {
-  _classCallCheck(this, NTerm);
-
-  this._definitions = definitions;
+var isTerm = exports.isTerm = function isTerm(variable, term) {
+  return variable.constructor.name === 'Term' && variable.symbol() === term;
 };
+
+var NTerm = exports.NTerm = function () {
+  function NTerm(definitions) {
+    _classCallCheck(this, NTerm);
+
+    this._definitions = definitions;
+  }
+
+  _createClass(NTerm, [{
+    key: 'definitions',
+    value: function definitions() {
+      return this._definitions;
+    }
+  }]);
+
+  return NTerm;
+}();
 
 var Listing = exports.Listing = function () {
   function Listing() {
