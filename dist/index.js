@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 
-console.log(1);
+var _definitions = require('./js/definitions');
