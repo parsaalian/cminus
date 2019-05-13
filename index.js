@@ -14,4 +14,6 @@ _.forEach(leftRecursionEliminated.list(), (value, key) => {
   leftFactored.add(leftFactoring(key, value));
 });
 
-console.log(Object.keys(leftFactored.list()).length);
+_.forEach(leftFactored.list(), (value, key) => {
+  console.log(key, value);
+});

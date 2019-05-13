@@ -23,4 +23,6 @@ _lodash2.default.forEach(leftRecursionEliminated.list(), function (value, key) {
   leftFactored.add((0, _ll.leftFactoring)(key, value));
 });
 
-console.log(Object.keys(leftFactored.list()).length);
+_lodash2.default.forEach(leftFactored.list(), function (value, key) {
+  console.log(key, value);
+});
