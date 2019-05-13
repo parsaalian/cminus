@@ -14,16 +14,6 @@ export const isTerm = function(variable, term) {
   return variable.constructor.name === 'Term' && variable.symbol() === term;
 }
 
-export class NTerm {
-  constructor(definitions) {
-    this._definitions = definitions;
-  }
-
-  definitions() {
-    return this._definitions;
-  }
-}
-
 export class Listing {
   constructor(list={}) {
     this._list = list;
@@ -37,7 +27,11 @@ export class Listing {
     return this._list[name];
   }
 
-  compare(element1, element2) {
-    return element1.constructor.name === element2.constructor.name;
+  list() {
+    return this._list;
+  }
+
+  keys() {
+    return this._list.keys;
   }
 }

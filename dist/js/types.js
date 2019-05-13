@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Listing = exports.NTerm = exports.isTerm = exports.Term = undefined;
+exports.Listing = exports.isTerm = exports.Term = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -36,23 +36,6 @@ var isTerm = exports.isTerm = function isTerm(variable, term) {
   return variable.constructor.name === 'Term' && variable.symbol() === term;
 };
 
-var NTerm = exports.NTerm = function () {
-  function NTerm(definitions) {
-    _classCallCheck(this, NTerm);
-
-    this._definitions = definitions;
-  }
-
-  _createClass(NTerm, [{
-    key: 'definitions',
-    value: function definitions() {
-      return this._definitions;
-    }
-  }]);
-
-  return NTerm;
-}();
-
 var Listing = exports.Listing = function () {
   function Listing() {
     var list = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -73,9 +56,14 @@ var Listing = exports.Listing = function () {
       return this._list[name];
     }
   }, {
-    key: 'compare',
-    value: function compare(element1, element2) {
-      return element1.constructor.name === element2.constructor.name;
+    key: 'list',
+    value: function list() {
+      return this._list;
+    }
+  }, {
+    key: 'keys',
+    value: function keys() {
+      return this._list.keys;
     }
   }]);
 
