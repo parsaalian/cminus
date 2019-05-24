@@ -2,11 +2,11 @@ import _ from 'lodash';
 
 export class Term {
   constructor(symbol) {
-    this._symbol = symbol;
+    this.symbol = symbol;
   }
 
   symbol() {
-    return this._symbol;
+    return this.symbol;
   }
 }
 
@@ -16,22 +16,22 @@ export const isTerm = function(variable, term) {
 
 export class Listing {
   constructor(list={}) {
-    this._list = list;
+    this.list = list;
   }
 
   add(list) {
-    _.merge(this._list, list);
+    _.merge(this.list, list);
   }
 
   get(name) {
-    return this._list[name];
+    return this.list[name];
   }
 
   list() {
-    return this._list;
+    return this.list;
   }
 
   keys() {
-    return this._list.keys;
+    return this.list.keys;
   }
 }

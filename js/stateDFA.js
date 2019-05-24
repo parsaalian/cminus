@@ -3,38 +3,38 @@ import hash from 'object-hash';
 
 export class StateDFA {
   constructor(rules) {
-    this._counter = 1;
-    this._items = constructItems(rules);
-    this._states = { 0: new State(closure(this._items, this._items[0])) };
-    this._stateHashs = { [this._states[0].getHash()]: 0 };
+    this.counter = 1;
+    this.items = constructItems(rules);
+    this.states = { 0: new State(closure(this.items, this.items[0])) };
+    this.stateHashs = { [this.states[0].getHash()]: 0 };
     this.constructStates(0);
   }
 
-  getStates() {
-    return this._states;
+  getState(index) {
+    return this.states[index];
   }
 
   constructStates(index) {
-    const state = this._states[index];
+    const state = this.states[index];
     let gotos = {};
     let nexts = [];
     _.forEach(state.getProductions(), production => {
       gotos = production.getNextTerm() ? _.mergeWith(gotos,
-              {[production.getNextTerm()]: goto(this._items, production, production.getNextTerm())},
+              {[production.getNextTerm()]: goto(this.items, production, production.getNextTerm())},
               (objVal, srcVal) => _.isArray(objVal) ? _.uniq(objVal.concat(srcVal)) : [srcVal])
               : gotos;
     });
     _.forEach(gotos, (value, key) => {
       const newState = new State(_.flatten(value));
-      if (!this._stateHashs[newState.getHash()]) {
-        this._states[this._counter] = newState;
-        this._stateHashs[newState.getHash()] = this._counter;
-        state.setGoto(key, this._counter);
-        nexts.push(this._counter);
-        this._counter += 1;
+      if (!this.stateHashs[newState.getHash()]) {
+        this.states[this.counter] = newState;
+        this.stateHashs[newState.getHash()] = this.counter;
+        state.setGoto(key, this.counter);
+        nexts.push(this.counter);
+        this.counter += 1;
       }
       else {
-        state.setGoto(key, this._stateHashs[newState.getHash()]);
+        state.setGoto(key, this.stateHashs[newState.getHash()]);
       }
     });
     _.forEach(nexts, next => this.constructStates(next));
@@ -43,56 +43,60 @@ export class StateDFA {
 
 export class State {
   constructor(productions) {
-    this._productions = productions;
-    this._stateHash = hash(this._productions);
-    this._gotos = {};
+    this.productions = productions;
+    this.stateHash = hash(this.productions);
+    this.gotos = {};
   }
 
   getProductions() {
-    return this._productions;
+    return this.productions;
+  }
+
+  getEndProductions() {
+    return _.filter(this.productions, p => p.getRuleRHS().length === p.getPointer());
   }
 
   getHash() {
-    return this._stateHash;
+    return this.stateHash;
   }
 
-  getGotos() {
-    return this._gotos;
+  getGoto(symbol) {
+    return this.gotos[symbol];
   }
 
   setGoto(term, state) {
-    this._gotos[term] = state;
+    this.gotos[term] = state;
   }
 }
 
 export class Production {
   constructor(rule, pointer) {
-    this._rule = rule;
-    this._pointer = pointer;
+    this.rule = rule;
+    this.pointer = pointer;
   }
 
   getRule() {
-    return this._rule;
+    return this.rule;
   }
 
   getRuleLHS() {
-    return this._rule[0];
+    return this.rule[0];
   }
 
   getRuleRHS() {
-    return _.tail(this._rule);
+    return _.tail(this.rule);
   }
 
   getPointer() {
-    return this._pointer;
+    return this.pointer;
   }
 
   getNextTerm() {;
-    return this.getRuleRHS()[this._pointer];
+    return this.getRuleRHS()[this.pointer];
   }
 
   getNextProduction() {
-    return new Production(this._rule, this._pointer + 1);
+    return new Production(this.rule, this.pointer + 1);
   }
 }
 

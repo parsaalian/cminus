@@ -19,13 +19,13 @@ var Term = exports.Term = function () {
   function Term(symbol) {
     _classCallCheck(this, Term);
 
-    this._symbol = symbol;
+    this.symbol = symbol;
   }
 
   _createClass(Term, [{
     key: 'symbol',
     value: function symbol() {
-      return this._symbol;
+      return this.symbol;
     }
   }]);
 
@@ -42,28 +42,28 @@ var Listing = exports.Listing = function () {
 
     _classCallCheck(this, Listing);
 
-    this._list = list;
+    this.list = list;
   }
 
   _createClass(Listing, [{
     key: 'add',
     value: function add(list) {
-      _lodash2.default.merge(this._list, list);
+      _lodash2.default.merge(this.list, list);
     }
   }, {
     key: 'get',
     value: function get(name) {
-      return this._list[name];
+      return this.list[name];
     }
   }, {
     key: 'list',
     value: function list() {
-      return this._list;
+      return this.list;
     }
   }, {
     key: 'keys',
     value: function keys() {
-      return this._list.keys;
+      return this.list.keys;
     }
   }]);
 

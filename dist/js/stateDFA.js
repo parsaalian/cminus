@@ -25,41 +25,41 @@ var StateDFA = exports.StateDFA = function () {
   function StateDFA(rules) {
     _classCallCheck(this, StateDFA);
 
-    this._counter = 1;
-    this._items = constructItems(rules);
-    this._states = { 0: new State(closure(this._items, this._items[0])) };
-    this._stateHashs = _defineProperty({}, this._states[0].getHash(), 0);
+    this.counter = 1;
+    this.items = constructItems(rules);
+    this.states = { 0: new State(closure(this.items, this.items[0])) };
+    this.stateHashs = _defineProperty({}, this.states[0].getHash(), 0);
     this.constructStates(0);
   }
 
   _createClass(StateDFA, [{
-    key: 'getStates',
-    value: function getStates() {
-      return this._states;
+    key: 'getState',
+    value: function getState(index) {
+      return this.states[index];
     }
   }, {
     key: 'constructStates',
     value: function constructStates(index) {
       var _this = this;
 
-      var state = this._states[index];
+      var state = this.states[index];
       var gotos = {};
       var nexts = [];
       _lodash2.default.forEach(state.getProductions(), function (production) {
-        gotos = production.getNextTerm() ? _lodash2.default.mergeWith(gotos, _defineProperty({}, production.getNextTerm(), goto(_this._items, production, production.getNextTerm())), function (objVal, srcVal) {
+        gotos = production.getNextTerm() ? _lodash2.default.mergeWith(gotos, _defineProperty({}, production.getNextTerm(), goto(_this.items, production, production.getNextTerm())), function (objVal, srcVal) {
           return _lodash2.default.isArray(objVal) ? _lodash2.default.uniq(objVal.concat(srcVal)) : [srcVal];
         }) : gotos;
       });
       _lodash2.default.forEach(gotos, function (value, key) {
         var newState = new State(_lodash2.default.flatten(value));
-        if (!_this._stateHashs[newState.getHash()]) {
-          _this._states[_this._counter] = newState;
-          _this._stateHashs[newState.getHash()] = _this._counter;
-          state.setGoto(key, _this._counter);
-          nexts.push(_this._counter);
-          _this._counter += 1;
+        if (!_this.stateHashs[newState.getHash()]) {
+          _this.states[_this.counter] = newState;
+          _this.stateHashs[newState.getHash()] = _this.counter;
+          state.setGoto(key, _this.counter);
+          nexts.push(_this.counter);
+          _this.counter += 1;
         } else {
-          state.setGoto(key, _this._stateHashs[newState.getHash()]);
+          state.setGoto(key, _this.stateHashs[newState.getHash()]);
         }
       });
       _lodash2.default.forEach(nexts, function (next) {
@@ -75,30 +75,37 @@ var State = exports.State = function () {
   function State(productions) {
     _classCallCheck(this, State);
 
-    this._productions = productions;
-    this._stateHash = (0, _objectHash2.default)(this._productions);
-    this._gotos = {};
+    this.productions = productions;
+    this.stateHash = (0, _objectHash2.default)(this.productions);
+    this.gotos = {};
   }
 
   _createClass(State, [{
     key: 'getProductions',
     value: function getProductions() {
-      return this._productions;
+      return this.productions;
+    }
+  }, {
+    key: 'getEndProductions',
+    value: function getEndProductions() {
+      return _lodash2.default.filter(this.productions, function (p) {
+        return p.getRuleRHS().length === p.getPointer();
+      });
     }
   }, {
     key: 'getHash',
     value: function getHash() {
-      return this._stateHash;
+      return this.stateHash;
     }
   }, {
-    key: 'getGotos',
-    value: function getGotos() {
-      return this._gotos;
+    key: 'getGoto',
+    value: function getGoto(symbol) {
+      return this.gotos[symbol];
     }
   }, {
     key: 'setGoto',
     value: function setGoto(term, state) {
-      this._gotos[term] = state;
+      this.gotos[term] = state;
     }
   }]);
 
@@ -109,40 +116,40 @@ var Production = exports.Production = function () {
   function Production(rule, pointer) {
     _classCallCheck(this, Production);
 
-    this._rule = rule;
-    this._pointer = pointer;
+    this.rule = rule;
+    this.pointer = pointer;
   }
 
   _createClass(Production, [{
     key: 'getRule',
     value: function getRule() {
-      return this._rule;
+      return this.rule;
     }
   }, {
     key: 'getRuleLHS',
     value: function getRuleLHS() {
-      return this._rule[0];
+      return this.rule[0];
     }
   }, {
     key: 'getRuleRHS',
     value: function getRuleRHS() {
-      return _lodash2.default.tail(this._rule);
+      return _lodash2.default.tail(this.rule);
     }
   }, {
     key: 'getPointer',
     value: function getPointer() {
-      return this._pointer;
+      return this.pointer;
     }
   }, {
     key: 'getNextTerm',
     value: function getNextTerm() {
       ;
-      return this.getRuleRHS()[this._pointer];
+      return this.getRuleRHS()[this.pointer];
     }
   }, {
     key: 'getNextProduction',
     value: function getNextProduction() {
-      return new Production(this._rule, this._pointer + 1);
+      return new Production(this.rule, this.pointer + 1);
     }
   }]);
 
@@ -158,12 +165,6 @@ var constructItems = exports.constructItems = function constructItems(rules) {
     return result;
   }, []));
 };
-
-/*export const closure = function(items, production) {
-  return _.concat(production, _.filter(items, (item) => {
-    return item.getRuleLHS() === production.getNextTerm() && item.getPointer() === 0;
-  }));
-}*/
 
 var closure = exports.closure = function closure(items, production) {
   var terms = ['+', '*', '(', ')', 'id'];

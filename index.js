@@ -17,7 +17,7 @@ _.forEach(leftRecursionEliminated.list(), (value, key) => {
 });*/
 
 import _ from 'lodash';
-import { StateDFA } from './js/stateDFA';
+import Parser from './js/parser';
 
 const rules = [
   ['E\'', 'E'],
@@ -28,12 +28,8 @@ const rules = [
   ['F', '(', 'E', ')'],
   ['F', 'id']
 ];
+const input = ['id', '*', 'id', '+', 'id'];
 
-const states = new StateDFA(rules);
-
-_.forEach(states.getStates(), (value, key) => {
-  console.log(key);
-  console.log(value.getProductions());
-  console.log(value.getGotos());
-  console.log();
-});
+const parser = new Parser(rules, input);
+parser.parse();
+console.log(parser.getReductions());
