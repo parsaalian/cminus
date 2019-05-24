@@ -4,25 +4,35 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _types = require('./js/types');
-
-var _definitions = require('./js/definitions');
-
-var _ll = require('./js/ll1');
+var _stateDFA = require('./js/stateDFA');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var leftRecursionEliminated = new _types.Listing();
-var leftFactored = new _types.Listing();
+/*import { Listing } from './js/types';
+import { leftRecursionElimination, leftFactoring } from './js/ll1';*/
 
-_lodash2.default.forEach(_definitions.rules.list(), function (value, key) {
-  leftRecursionEliminated.add((0, _ll.leftRecursionElimination)(key, value));
+/*const leftRecursionEliminated = new Listing();
+const leftFactored = new Listing();
+
+_.forEach(rules.list(), (value, key) => {
+  leftRecursionEliminated.add(leftRecursionElimination(key, value));
 });
 
-_lodash2.default.forEach(leftRecursionEliminated.list(), function (value, key) {
-  leftFactored.add((0, _ll.leftFactoring)(key, value));
+_.forEach(leftRecursionEliminated.list(), (value, key) => {
+  leftFactored.add(leftFactoring(key, value));
 });
 
-_lodash2.default.forEach(leftFactored.list(), function (value, key) {
+_.forEach(leftRecursionEliminated.list(), (value, key) => {
   console.log(key, value);
+});*/
+
+var rules = [['E\'', 'E'], ['E', 'E', '+', 'T'], ['E', 'T'], ['T', 'T', '*', 'F'], ['T', 'F'], ['F', '(', 'E', ')'], ['F', 'id']];
+
+var states = new _stateDFA.StateDFA(rules);
+
+_lodash2.default.forEach(states.getStates(), function (value, key) {
+  console.log(key);
+  console.log(value.getProductions());
+  console.log(value.getGotos());
+  console.log();
 });

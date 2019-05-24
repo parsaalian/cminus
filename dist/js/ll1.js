@@ -37,6 +37,19 @@ var leftRecursionElimination = exports.leftRecursionElimination = function leftR
   }), [_definitions.terms.get('eps')])), _ref2);
 };
 
+/*
+trying to translate into scala
+
+def leftRecursionEliminated(name: String, definition: List): Map = {
+  val alphas = definition.filter(d => d[0] === name).map(d => d.slice(1));
+  val betas = definition.filter(d => d[0] !== name);
+  return if(alphas.length == 0)
+  Map((name, betas)) else
+  Map((name, betas.map(beta => if (isTerm(beta[0], 'EPS')) [name + '\''] else concat(beta, name + '\''))),
+  (name + '\'', concat(alphas.map(alpha => concat(alpha, name + '\'')), [terms.get('eps')])))
+}
+*/
+
 // TODO: Multi-repeat left-factoring ( e.g. A -> Aa | A+b | A+c )
 var leftFactoring = exports.leftFactoring = function leftFactoring(name, definition) {
   var result = _defineProperty({}, name, []);
